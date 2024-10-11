@@ -1,0 +1,32 @@
+name: Sync Repo1 to Repo2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo1
+        uses: actions/checkout@v3
+        with:
+          repository: vasylkiv-t/auto-marge-2
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: auto-marge-2
+
+      - name: Checkout Repo2
+        uses: actions/checkout@v3
+        with:
+          repository: vasylkiv-t/auto-marge
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: auto-marge
+
+      - name: Sync Changes
+        run: |
+          cd auto-marge
+          git remote add auto-marge-2 ../auto-marge-2
+          git fetch auto-marge-2
+          git cherry-pick $(git log auto-marge-2/main --not main --pretty=format:"%H")
+          git push origin main
