@@ -15,6 +15,7 @@ jobs:
           repository: vasylkiv-t/auto-marge-2
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: auto-marge-2
+          fetch-depth: 0
 
       - name: Checkout Repo2
         uses: actions/checkout@v3
@@ -22,6 +23,7 @@ jobs:
           repository: vasylkiv-t/auto-marge
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: auto-marge
+          fetch-depth: 0 
 
       - name: Sync Changes
         run: |
