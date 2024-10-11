@@ -12,23 +12,31 @@ jobs:
       - name: Checkout Repo1
         uses: actions/checkout@v3
         with:
-          repository: vasylkiv-t/auto-marge-2
+          repository: yourusername/repo1
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          path: auto-marge-2
-          fetch-depth: 0
+          path: repo1
+          fetch-depth: 0  # Клонуємо репозиторій з усією історією
 
       - name: Checkout Repo2
         uses: actions/checkout@v3
         with:
-          repository: vasylkiv-t/auto-marge
+          repository: yourusername/repo2
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          path: auto-marge
-          fetch-depth: 0 
+          path: repo2
+          fetch-depth: 0  # Клонуємо репозиторій з усією історією
 
       - name: Sync Changes
         run: |
-          cd auto-marge
-          git remote add auto-marge-2 ../auto-marge-2
-          git fetch auto-marge-2
-          git cherry-pick $(git log auto-marge-2/main --not main --pretty=format:"%H")
-          git push origin main
+          cd repo2
+          git remote add repo1 ../repo1
+          git fetch repo1
+          git cherry-pick $(git log repo1/main --not main --pretty=format:"%H") || git cherry-pick --skip
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          commit-message: "Sync changes from repo1"
+          title: "Automated Sync from repo1"
+          body: "This pull request contains changes synced from repo1 to repo2."
+          branch: sync-branch
