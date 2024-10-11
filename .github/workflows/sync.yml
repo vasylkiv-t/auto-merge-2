@@ -12,25 +12,26 @@ jobs:
       - name: Checkout Repo1
         uses: actions/checkout@v3
         with:
-          repository: yourusername/repo1
+          repository: vasylkiv-t/auto-marge
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          path: repo1
-          fetch-depth: 0  # Клонуємо репозиторій з усією історією
+          path: auto-marge
+          fetch-depth: 0
 
       - name: Checkout Repo2
         uses: actions/checkout@v3
         with:
-          repository: yourusername/repo2
+          repository: vasylkiv-t/auto-marge-2
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          path: repo2
-          fetch-depth: 0  # Клонуємо репозиторій з усією історією
+          path: auto-marge-2
+          fetch-depth: 0
 
+          
       - name: Sync Changes
         run: |
-          cd repo2
-          git remote add repo1 ../repo1
-          git fetch repo1
-          git cherry-pick $(git log repo1/main --not main --pretty=format:"%H") || git cherry-pick --skip
+          cd auto-marge-2
+          git remote add auto-marge ../auto-marge
+          git fetch auto-marge
+          git cherry-pick $(git log auto-marge/main --not main --pretty=format:"%H") || git cherry-pick --skip
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
