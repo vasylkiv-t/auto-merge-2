@@ -9,6 +9,11 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure Git Identity
+        run: |
+          git config --global user.email "vasylkiv.t@gmail.com"
+          git config --global user.name "vasylkiv"
+    
       - name: Checkout Repo1
         uses: actions/checkout@v3
         with:
